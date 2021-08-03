@@ -1,16 +1,15 @@
 function knapsack(weights, profits, element, space) {
-  if (element >= weights.length) return 0;
-  
-  let includedProfit = 0;
-  let excludedProfit = 0;
+  if (element >= weights.length || space <= 0) return 0;
 
   if (weights[element] <= space) {
-    includedProfit = profits[element] + knapsack(weights, profits, element + 1, space - weights[element]);
+    const includedProfit = profits[element] + knapsack(weights, profits, element + 1, space - weights[element]);
+    const excludedProfit = knapsack(weights, profits, element + 1, space);
+    return Math.max(includedProfit, excludedProfit);
+  } else {
+    const excludedProfit = knapsack(weights, profits, element + 1, space);
+    return excludedProfit;
   }
   
-  excludedProfit = knapsack(weights, profits, element + 1, space);
-
-  return Math.max(includedProfit, excludedProfit);
 }
 
 
