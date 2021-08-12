@@ -1,3 +1,5 @@
+// LeetCode 1092 (https://leetcode.com/problems/shortest-common-supersequence/)
+
 function shortestCommonSupersequence(str1, str2) {
   const lcs = getLongestCommonSubsequence(str1, str2);
   let pointer_str1 = 0;
