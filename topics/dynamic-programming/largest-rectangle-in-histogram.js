@@ -1,34 +1,22 @@
 // LeetCode 84 (https://leetcode.com/problems/largest-rectangle-in-histogram/)
 
-var largestRectangleArea = function(heights) {
-  const stackLeft = [];
-  const leftLimits = Array(heights.length).fill(0);
+function largestRectangleArea(heights) {
+  const stack = [];
+  let largestArea = 0;
+  const extendedHeights = heights.concat([0]);
   
-  for (let idx = 0; idx < heights.length; idx++) {
-    while (stackLeft.length) {
-      if (heights[stackLeft[stackLeft.length - 1]] < heights[idx]) break;
-      stackLeft.pop();
+  for (let idx = 0; idx < extendedHeights.length; idx++) {
+    const currentHeight = extendedHeights[idx];
+    while (stack.length && extendedHeights[stack[stack.length - 1]] > currentHeight) {
+      const prevHeight = extendedHeights[stack.pop()];
+      const width = stack.length ? idx - stack[stack.length - 1] - 1 : idx;
+      largestArea = Math.max(largestArea, width * prevHeight);
     }
-    
-    leftLimits[idx] = stackLeft.length ? stackLeft[stackLeft.length - 1] + 1 : 0;
-    stackLeft.push(idx);
+    stack.push(idx);
   }
   
-  let largest = 0;
-  const stackRight = [];
-  
-  for (let idx = heights.length - 1; idx >= 0; idx--) {
-    while (stackRight.length) {
-      if (heights[stackRight[stackRight.length - 1]] < heights[idx]) break;
-      stackRight.pop();
-    }
-    
-    const rightLimit =  stackRight.length ? stackRight[stackRight.length - 1] - 1 : heights.length - 1;
-    stackRight.push(idx);
-    
-    const rect = heights[idx] * (rightLimit - leftLimits[idx] + 1);
-    largest = Math.max(largest, rect);
-  }
-  
-  return largest;
+  return largestArea;
 };
+
+const heights = [2,1,5,6,2,3];
+console.log(largestRectangleArea(heights));
